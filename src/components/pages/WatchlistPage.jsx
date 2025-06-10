@@ -112,12 +112,12 @@ const WatchlistPage = () => {
         actions={addMoviesButton}
       />
 
-      {/* Movie Grid */}
+{/* Movie Grid */}
       <MovieGrid 
         movies={movies} 
         onMovieClick={handleMovieClick} 
         showRemoveButton={true} 
-        onRemove={handleRemoveFromWatchlist}
+        onRemove={(movieId) => handleRemoveFromWatchlist(movieId)}
       />
 
       {/* Movie Detail Modal */}

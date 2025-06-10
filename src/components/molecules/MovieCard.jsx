@@ -114,12 +114,17 @@ const MovieCard = ({ movie, onClick, showRemoveButton, onRemove }) => {
           </motion.button>
         )}
 
-        {/* Remove button for watchlist */}
+{/* Remove button for watchlist */}
         {showRemoveButton && (
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={handleWatchlistToggle}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onRemove) {
+                onRemove(movie.id);
+              }
+            }}
             className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
           >
             <ApperIcon name="X" size={14} />
