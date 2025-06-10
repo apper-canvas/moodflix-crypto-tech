@@ -9,13 +9,16 @@ import EmptyState from '@/components/molecules/EmptyState';
 import ErrorState from '@/components/molecules/ErrorState';
 import PageHeader from '@/components/organisms/PageHeader';
 import Button from '@/components/atoms/Button';
+import EditMovieNightModal from '@/components/organisms/EditMovieNightModal';
 import { movieNightService } from '@/services';
 
 const MovieNightsPage = () => {
-  const [movieNights, setMovieNights] = useState([]);
+const [movieNights, setMovieNights] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingMovieNight, setEditingMovieNight] = useState(null);
 
   useEffect(() => {
     loadMovieNights();
@@ -52,7 +55,26 @@ const MovieNightsPage = () => {
       setMovieNights(movieNights.filter(night => night.id !== id));
       toast.success('Movie night deleted');
     } catch (err) {
-      toast.error('Failed to delete movie night');
+toast.error('Failed to delete movie night');
+    }
+  };
+
+  const handleEditMovieNight = (movieNight) => {
+    setEditingMovieNight(movieNight);
+    setShowEditModal(true);
+  };
+
+  const handleUpdateMovieNight = async (movieNightData) => {
+    try {
+      const updatedMovieNight = await movieNightService.update(editingMovieNight.id, movieNightData);
+      setMovieNights(movieNights.map(night => 
+        night.id === editingMovieNight.id ? updatedMovieNight : night
+      ));
+      setShowEditModal(false);
+      setEditingMovieNight(null);
+      toast.success('Movie night updated successfully!');
+    } catch (err) {
+      toast.error('Failed to update movie night');
     }
   };
 
@@ -126,9 +148,10 @@ const MovieNightsPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <MovieNightCard
+<MovieNightCard
                 movieNight={movieNight}
                 onShare={() => handleShareMovieNight(movieNight)}
+                onEdit={() => handleEditMovieNight(movieNight)}
                 onDelete={() => handleDeleteMovieNight(movieNight.id)}
               />
             </motion.div>
@@ -141,6 +164,18 @@ const MovieNightsPage = () => {
         <CreateMovieNightModal
           onClose={() => setShowCreateModal(false)}
           onCreate={handleCreateMovieNight}
+        />
+      )}
+
+      {/* Edit Movie Night Modal */}
+      {showEditModal && editingMovieNight && (
+        <EditMovieNightModal
+          movieNight={editingMovieNight}
+          onClose={() => {
+            setShowEditModal(false);
+            setEditingMovieNight(null);
+          }}
+          onUpdate={handleUpdateMovieNight}
         />
       )}
     </div>

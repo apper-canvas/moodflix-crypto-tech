@@ -5,7 +5,7 @@ import { movieService } from '@/services';
 import { format } from 'date-fns';
 import Button from '@/components/atoms/Button';
 
-const MovieNightCard = ({ movieNight, onShare, onDelete }) => {
+const MovieNightCard = ({ movieNight, onShare, onEdit, onDelete }) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -37,23 +37,26 @@ const MovieNightCard = ({ movieNight, onShare, onDelete }) => {
       whileHover={{ y: -4 }}
       className="bg-card rounded-lg shadow-movie-card hover:shadow-movie-card-hover transition-all duration-200 overflow-hidden"
     >
-      {/* Movie Posters Preview */}
+{/* Movie Posters Preview */}
       <div className="relative h-48 bg-secondary">
-        {loading ? (
-          <div className="h-full flex items-center justify-center">
-            <div className="animate-spin">
-              <ApperIcon name="Loader2" className="w-8 h-8 text-accent/50" />
-            </div>
-          </div>
-        ) : movies.length > 0 ? (
-          <div className="grid grid-cols-3 h-full gap-1">
+        {!loading && movies.length > 0 ? (
+          <div className="flex h-full">
             {movies.slice(0, 3).map((movie, index) => (
-              <div key={movie.id} className="relative overflow-hidden">
-                <img
-                  src={movie.poster}
-                  alt={movie.title}
-                  className="w-full h-full object-cover"
-                />
+              <div
+                key={movie.id}
+                className={`relative flex-1 ${index > 0 ? 'border-l border-background/20' : ''}`}
+              >
+                {movie.poster_path ? (
+                  <img
+                    src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
+                    alt={movie.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-secondary flex items-center justify-center">
+                    <ApperIcon name="Film" className="w-8 h-8 text-accent/30" />
+                  </div>
+                )}
                 {index === 2 && movies.length > 3 && (
                   <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
                     <span className="text-white font-semibold">
@@ -69,7 +72,6 @@ const MovieNightCard = ({ movieNight, onShare, onDelete }) => {
             <ApperIcon name="Film" className="w-12 h-12 text-accent/30" />
           </div>
         )}
-
         {/* Actions */}
         <div className="absolute top-2 right-2 flex space-x-1">
           <Button
