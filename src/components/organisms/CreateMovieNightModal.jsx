@@ -194,7 +194,7 @@ const CreateMovieNightModal = ({ onClose, onCreate }) => {
 
           {/* Content */}
           <div className="p-6">
-            <AnimatePresence mode="wait">
+<AnimatePresence mode="wait">
               {step === 1 ? (
                 <motion.div
                   key="step1"
@@ -236,7 +236,7 @@ const CreateMovieNightModal = ({ onClose, onCreate }) => {
                     </Button>
                   </div>
                 </motion.div>
-              ) : (
+              ) : step === 2 ? (
                 <motion.div
                   key="step2"
                   initial={{ opacity: 0, x: 20 }}
@@ -329,7 +329,7 @@ const CreateMovieNightModal = ({ onClose, onCreate }) => {
                             </motion.div>
                           );
                         })}
-</div>
+                      </div>
                     )}
                   </div>
 
@@ -516,7 +516,7 @@ const CreateMovieNightModal = ({ onClose, onCreate }) => {
                         whileTap={{ scale: 0.95 }}
                       >
                         Create Movie Night
-</Button>
+                      </Button>
                     </div>
                   </div>
                 </motion.div>
