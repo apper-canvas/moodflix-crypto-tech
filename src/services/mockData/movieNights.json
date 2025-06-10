@@ -1,0 +1,23 @@
+[
+  {
+    "id": "1",
+    "name": "Action Movie Marathon",
+    "movieIds": ["1", "6", "10"],
+    "createdAt": "2024-01-15T20:30:00.000Z",
+    "shareCode": "act2024mx"
+  },
+  {
+    "id": "2", 
+    "name": "Rom-Com Night",
+    "movieIds": ["2", "7", "11"],
+    "createdAt": "2024-01-12T19:45:00.000Z",
+    "shareCode": "rom2024cx"
+  },
+  {
+    "id": "3",
+    "name": "Thriller & Mystery",
+    "movieIds": ["3", "8"],
+    "createdAt": "2024-01-08T21:15:00.000Z", 
+    "shareCode": "thr2024mx"
+  }
+]
