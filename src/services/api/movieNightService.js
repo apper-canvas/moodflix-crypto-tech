@@ -28,13 +28,16 @@ class MovieNightService {
     return movieNight ? { ...movieNight } : null
   }
 
-  async create(movieNightData) {
+async create(movieNightData) {
     await delay(400)
     const newMovieNight = {
       ...movieNightData,
       id: Date.now().toString(),
       createdAt: new Date().toISOString(),
-      shareCode: generateShareCode()
+      shareCode: generateShareCode(),
+      votes: movieNightData.votes || {},
+      winningMovieId: movieNightData.winningMovieId || null,
+      votingComplete: movieNightData.votingComplete || false
     }
     this.movieNights.unshift(newMovieNight)
     return { ...newMovieNight }
@@ -59,7 +62,62 @@ class MovieNightService {
     if (index === -1) throw new Error('Movie night not found')
     
     this.movieNights.splice(index, 1)
-    return true
+return true
+  }
+
+  async vote(movieNightId, movieId, memberId, voteType) {
+    await delay(200)
+    const movieNight = this.movieNights.find(mn => mn.id === movieNightId)
+    if (!movieNight) throw new Error('Movie night not found')
+    
+    if (!movieNight.votes) movieNight.votes = {}
+    if (!movieNight.votes[movieId]) {
+      movieNight.votes[movieId] = { votes: 0, voters: [] }
+    }
+    
+    const movieVotes = movieNight.votes[movieId]
+    if (movieVotes.voters.includes(memberId)) {
+      throw new Error('Member has already voted for this movie')
+    }
+    
+    movieVotes.votes += (voteType === 'up' ? 1 : -1)
+    movieVotes.voters.push(memberId)
+    
+    movieNight.updatedAt = new Date().toISOString()
+    return { ...movieNight }
+  }
+
+  async getVotingResults(movieNightId) {
+    await delay(150)
+    const movieNight = this.movieNights.find(mn => mn.id === movieNightId)
+    if (!movieNight) throw new Error('Movie night not found')
+    
+    return movieNight.votes || {}
+  }
+
+  async completeVoting(movieNightId) {
+    await delay(250)
+    const movieNight = this.movieNights.find(mn => mn.id === movieNightId)
+    if (!movieNight) throw new Error('Movie night not found')
+    
+    // Determine winner
+    let maxVotes = -Infinity
+    let winningMovieId = null
+    
+    if (movieNight.votes) {
+      Object.entries(movieNight.votes).forEach(([movieId, voteData]) => {
+        if (voteData.votes > maxVotes) {
+          maxVotes = voteData.votes
+          winningMovieId = movieId
+        }
+      })
+    }
+    
+    movieNight.votingComplete = true
+    movieNight.winningMovieId = winningMovieId
+    movieNight.updatedAt = new Date().toISOString()
+    
+    return { ...movieNight }
   }
 }
 
