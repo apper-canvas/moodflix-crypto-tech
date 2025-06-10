@@ -1,13 +1,15 @@
-import { motion } from 'framer-motion'
-import ApperIcon from './ApperIcon'
+import React from 'react';
+import { motion } from 'framer-motion';
+import ApperIcon from '@/components/ApperIcon';
+import Button from '@/components/atoms/Button';
 
-export default function EmptyState({ 
+const EmptyState = ({ 
   icon = 'Inbox', 
   title = 'Nothing here yet', 
   description = 'Get started by adding some content',
   actionLabel,
   onAction 
-}) {
+}) => {
   return (
     <motion.div
       initial={{ scale: 0.9, opacity: 0 }}
@@ -41,15 +43,17 @@ export default function EmptyState({
       </p>
       
       {actionLabel && onAction && (
-        <motion.button
+        <Button
+          onClick={onAction}
+          className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={onAction}
-          className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors"
         >
           {actionLabel}
-        </motion.button>
+        </Button>
       )}
     </motion.div>
-  )
-}
+  );
+};
+
+export default EmptyState;

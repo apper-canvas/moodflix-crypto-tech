@@ -1,70 +1,72 @@
-import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useEffect } from 'react'
-import { toast } from 'react-toastify'
-import ApperIcon from './ApperIcon'
-import MovieCard from './MovieCard'
-import { movieService } from '../services'
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-toastify';
+import ApperIcon from '@/components/ApperIcon';
+import MovieCard from '@/components/molecules/MovieCard';
+import Input from '@/components/atoms/Input';
+import Button from '@/components/atoms/Button';
+import { movieService } from '@/services';
 
-export default function CreateMovieNightModal({ onClose, onCreate }) {
-  const [step, setStep] = useState(1)
-  const [name, setName] = useState('')
-  const [selectedMovies, setSelectedMovies] = useState([])
-  const [availableMovies, setAvailableMovies] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
+const CreateMovieNightModal = ({ onClose, onCreate }) => {
+  const [step, setStep] = useState(1);
+  const [name, setName] = useState('');
+  const [selectedMovies, setSelectedMovies] = useState([]);
+  const [availableMovies, setAvailableMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    loadMovies()
-  }, [])
+    loadMovies();
+  }, []);
 
   const loadMovies = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const result = await movieService.getAll()
-      setAvailableMovies(result)
+      const result = await movieService.getAll();
+      setAvailableMovies(result);
     } catch (err) {
-      toast.error('Failed to load movies')
+      toast.error('Failed to load movies');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const filteredMovies = availableMovies.filter(movie =>
     movie.title.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  );
 
   const handleMovieToggle = (movie) => {
     setSelectedMovies(prev => {
-      const isSelected = prev.some(m => m.id === movie.id)
+      const isSelected = prev.some(m => m.id === movie.id);
       if (isSelected) {
-        return prev.filter(m => m.id !== movie.id)
+        return prev.filter(m => m.id !== movie.id);
       } else {
-        return [...prev, movie]
+        return [...prev, movie];
       }
-    })
-  }
+    });
+  };
 
   const handleNext = () => {
     if (step === 1 && !name.trim()) {
-      toast.error('Please enter a name for your movie night')
-      return
+      toast.error('Please enter a name for your movie night');
+      return;
     }
-    setStep(2)
-  }
+    setStep(2);
+  };
 
   const handleCreate = () => {
     if (selectedMovies.length === 0) {
-      toast.error('Please select at least one movie')
-      return
+      toast.error('Please select at least one movie');
+      return;
     }
 
     const movieNightData = {
       name: name.trim(),
       movieIds: selectedMovies.map(m => m.id)
-    }
+    };
 
-    onCreate(movieNightData)
-  }
+    onCreate(movieNightData);
+  };
 
   return (
     <>
@@ -97,12 +99,14 @@ export default function CreateMovieNightModal({ onClose, onCreate }) {
                 Step {step} of 2: {step === 1 ? 'Name your collection' : 'Select movies'}
               </p>
             </div>
-            <button
+            <Button
               onClick={onClose}
-              className="p-2 text-accent/50 hover:text-accent transition-colors"
+              className="p-2 text-accent/50 hover:text-accent bg-transparent"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               <ApperIcon name="X" size={24} />
-            </button>
+            </Button>
           </div>
 
           {/* Content */}
@@ -117,36 +121,36 @@ export default function CreateMovieNightModal({ onClose, onCreate }) {
                   className="space-y-6"
                 >
                   <div>
-                    <label className="block text-accent font-medium mb-2">
+                    <label htmlFor="movieNightName" className="block text-accent font-medium mb-2">
                       Movie Night Name
                     </label>
-                    <input
-                      type="text"
+                    <Input
+                      id="movieNightName"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g., Action Movie Marathon, Rom-Com Night..."
-                      className="w-full px-4 py-3 bg-background border border-secondary rounded-lg text-accent placeholder-accent/50 focus:border-primary focus:outline-none transition-colors"
                       autoFocus
+                      className="bg-background"
                     />
                   </div>
 
                   <div className="flex justify-end space-x-3">
-                    <motion.button
+                    <Button
+                      onClick={onClose}
+                      className="px-6 py-3 bg-card border border-secondary text-accent rounded-lg font-medium hover:bg-secondary"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={onClose}
-                      className="px-6 py-3 bg-card border border-secondary text-accent rounded-lg font-medium hover:bg-secondary transition-colors"
                     >
                       Cancel
-                    </motion.button>
-                    <motion.button
+                    </Button>
+                    <Button
+                      onClick={handleNext}
+                      className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={handleNext}
-                      className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
                     >
                       Next
-                    </motion.button>
+                    </Button>
                   </div>
                 </motion.div>
               ) : (
@@ -163,12 +167,12 @@ export default function CreateMovieNightModal({ onClose, onCreate }) {
                       name="Search" 
                       className="absolute left-3 top-1/2 transform -translate-y-1/2 text-accent/50 w-5 h-5" 
                     />
-                    <input
+                    <Input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search movies..."
-                      className="w-full pl-10 pr-4 py-3 bg-background border border-secondary rounded-lg text-accent placeholder-accent/50 focus:border-primary focus:outline-none transition-colors"
+                      className="pl-10 pr-4 py-3 bg-background"
                     />
                   </div>
 
@@ -188,12 +192,14 @@ export default function CreateMovieNightModal({ onClose, onCreate }) {
                             className="flex items-center space-x-2 bg-primary/10 border border-primary/20 text-primary px-3 py-1 rounded-full"
                           >
                             <span className="text-sm">{movie.title}</span>
-                            <button
+                            <Button
                               onClick={() => handleMovieToggle(movie)}
-                              className="hover:bg-primary/20 rounded-full p-1"
+                              className="hover:bg-primary/20 rounded-full p-1 bg-transparent"
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
                             >
                               <ApperIcon name="X" size={12} />
-                            </button>
+                            </Button>
                           </motion.div>
                         ))}
                       </div>
@@ -214,7 +220,7 @@ export default function CreateMovieNightModal({ onClose, onCreate }) {
                     ) : (
                       <div className="grid grid-cols-4 md:grid-cols-6 gap-3">
                         {filteredMovies.map(movie => {
-                          const isSelected = selectedMovies.some(m => m.id === movie.id)
+                          const isSelected = selectedMovies.some(m => m.id === movie.id);
                           return (
                             <motion.div
                               key={movie.id}
@@ -238,30 +244,30 @@ export default function CreateMovieNightModal({ onClose, onCreate }) {
                                 </div>
                               )}
                             </motion.div>
-                          )
+                          );
                         })}
                       </div>
                     )}
                   </div>
 
                   <div className="flex justify-between">
-                    <motion.button
+                    <Button
+                      onClick={() => setStep(1)}
+                      className="px-6 py-3 bg-card border border-secondary text-accent rounded-lg font-medium hover:bg-secondary"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => setStep(1)}
-                      className="px-6 py-3 bg-card border border-secondary text-accent rounded-lg font-medium hover:bg-secondary transition-colors"
                     >
                       Back
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                    </Button>
+                    <Button
                       onClick={handleCreate}
                       disabled={selectedMovies.length === 0}
-                      className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                     >
                       Create Movie Night
-                    </motion.button>
+                    </Button>
                   </div>
                 </motion.div>
               )}
@@ -270,5 +276,7 @@ export default function CreateMovieNightModal({ onClose, onCreate }) {
         </div>
       </motion.div>
     </>
-  )
-}
+  );
+};
+
+export default CreateMovieNightModal;

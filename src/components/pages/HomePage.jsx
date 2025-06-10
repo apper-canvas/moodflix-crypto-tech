@@ -1,9 +1,13 @@
-import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
-import ApperIcon from '../components/ApperIcon'
+import React from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import ApperIcon from '@/components/ApperIcon';
+import QuickActionsSection from '@/components/organisms/QuickActionsSection';
+import Button from '@/components/atoms/Button';
+import MainFeatureSection from '@/components/organisms/MainFeatureSection';
 
-export default function Home() {
-  const navigate = useNavigate()
+const HomePage = () => {
+  const navigate = useNavigate();
 
   const quickActions = [
     {
@@ -27,7 +31,7 @@ export default function Home() {
       action: () => navigate('/movie-nights'),
       color: "bg-success"
     }
-  ]
+  ];
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -63,28 +67,11 @@ export default function Home() {
       </motion.div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        {quickActions.map((action, index) => (
-          <motion.button
-            key={action.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 + 0.3 }}
-            whileHover={{ 
-              scale: 1.05,
-              boxShadow: "0 8px 24px rgba(229, 9, 20, 0.3)"
-            }}
-            whileTap={{ scale: 0.95 }}
-            onClick={action.action}
-            className="bg-card p-6 rounded-lg shadow-movie-card hover:shadow-movie-card-hover transition-all duration-200 text-left group"
-          >
-            <div className={`w-12 h-12 ${action.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200`}>
-              <ApperIcon name={action.icon} className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold text-accent mb-2">{action.title}</h3>
-            <p className="text-accent/70">{action.description}</p>
-          </motion.button>
-        ))}
+      <QuickActionsSection actions={quickActions} />
+
+      {/* Main Feature / Mood Selector */}
+      <div className="mb-12">
+        <MainFeatureSection />
       </div>
 
       {/* Get Started */}
@@ -94,15 +81,17 @@ export default function Home() {
         transition={{ delay: 0.6 }}
         className="text-center"
       >
-        <motion.button
+        <Button
+          onClick={() => navigate('/discover')}
+          className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg font-medium text-lg shadow-lg"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => navigate('/discover')}
-          className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg font-medium text-lg shadow-lg transition-all duration-200"
         >
           Start Discovering Movies
-        </motion.button>
+        </Button>
       </motion.div>
     </div>
-  )
-}
+  );
+};
+
+export default HomePage;

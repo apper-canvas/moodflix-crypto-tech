@@ -1,39 +1,39 @@
-import { motion } from 'framer-motion'
-import { useState } from 'react'
-import ApperIcon from './ApperIcon'
-import { watchlistService } from '../services'
-import { toast } from 'react-toastify'
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import ApperIcon from '@/components/ApperIcon';
+import { watchlistService } from '@/services';
+import { toast } from 'react-toastify';
 
-export default function MovieCard({ movie, onClick, showRemoveButton, onRemove }) {
-  const [isInWatchlist, setIsInWatchlist] = useState(movie.isInWatchlist)
-  const [loading, setLoading] = useState(false)
+const MovieCard = ({ movie, onClick, showRemoveButton, onRemove }) => {
+  const [isInWatchlist, setIsInWatchlist] = useState(movie.isInWatchlist);
+  const [loading, setLoading] = useState(false);
 
   const handleWatchlistToggle = async (e) => {
-    e.stopPropagation()
-    setLoading(true)
+    e.stopPropagation();
+    setLoading(true);
     
     try {
       if (isInWatchlist) {
-        await watchlistService.removeFromWatchlist(movie.id)
-        setIsInWatchlist(false)
-        toast.success('Removed from watchlist')
-        if (onRemove) onRemove()
+        await watchlistService.removeFromWatchlist(movie.id);
+        setIsInWatchlist(false);
+        toast.success('Removed from watchlist');
+        if (onRemove) onRemove();
       } else {
-        await watchlistService.addToWatchlist(movie.id)
-        setIsInWatchlist(true)
-        toast.success('Added to watchlist')
+        await watchlistService.addToWatchlist(movie.id);
+        setIsInWatchlist(true);
+        toast.success('Added to watchlist');
       }
     } catch (err) {
-      toast.error('Failed to update watchlist')
+      toast.error('Failed to update watchlist');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const renderStars = (rating) => {
-    const stars = []
-    const fullStars = Math.floor(rating / 2)
-    const hasHalfStar = rating % 2 >= 1
+    const stars = [];
+    const fullStars = Math.floor(rating / 2);
+    const hasHalfStar = rating % 2 >= 1;
     
     for (let i = 0; i < 5; i++) {
       if (i < fullStars) {
@@ -43,7 +43,7 @@ export default function MovieCard({ movie, onClick, showRemoveButton, onRemove }
             name="Star" 
             className="w-3 h-3 text-yellow-400 fill-current" 
           />
-        )
+        );
       } else if (i === fullStars && hasHalfStar) {
         stars.push(
           <ApperIcon 
@@ -51,7 +51,7 @@ export default function MovieCard({ movie, onClick, showRemoveButton, onRemove }
             name="StarHalf" 
             className="w-3 h-3 text-yellow-400 fill-current" 
           />
-        )
+        );
       } else {
         stars.push(
           <ApperIcon 
@@ -59,11 +59,11 @@ export default function MovieCard({ movie, onClick, showRemoveButton, onRemove }
             name="Star" 
             className="w-3 h-3 text-gray-400" 
           />
-        )
+        );
       }
     }
-    return stars
-  }
+    return stars;
+  };
 
   return (
     <motion.div
@@ -140,5 +140,7 @@ export default function MovieCard({ movie, onClick, showRemoveButton, onRemove }
         </div>
       </div>
     </motion.div>
-  )
-}
+  );
+};
+
+export default MovieCard;

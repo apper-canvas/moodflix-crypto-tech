@@ -1,9 +1,11 @@
-import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
-import ApperIcon from '../components/ApperIcon'
+import React from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import ApperIcon from '@/components/ApperIcon';
+import Button from '@/components/atoms/Button';
 
-export default function NotFound() {
-  const navigate = useNavigate()
+const NotFoundPage = () => {
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
@@ -37,25 +39,27 @@ export default function NotFound() {
         </p>
         
         <div className="space-y-4">
-          <motion.button
+          <Button
+            onClick={() => navigate('/discover')}
+            className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium mx-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate('/discover')}
-            className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors mx-2"
           >
             Discover Movies
-          </motion.button>
+          </Button>
           
-          <motion.button
+          <Button
+            onClick={() => navigate(-1)}
+            className="bg-card hover:bg-secondary text-accent px-6 py-3 rounded-lg font-medium mx-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate(-1)}
-            className="bg-card hover:bg-secondary text-accent px-6 py-3 rounded-lg font-medium transition-colors mx-2"
           >
             Go Back
-          </motion.button>
+          </Button>
         </div>
       </motion.div>
     </div>
-  )
-}
+  );
+};
+
+export default NotFoundPage;

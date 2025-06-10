@@ -1,8 +1,8 @@
-import Home from '../pages/Home'
-import Discover from '../pages/Discover'
-import Watchlist from '../pages/Watchlist'
-import MovieNights from '../pages/MovieNights'
-import NotFound from '../pages/NotFound'
+import HomePage from '@/components/pages/HomePage';
+import DiscoverPage from '@/components/pages/DiscoverPage';
+import WatchlistPage from '@/components/pages/WatchlistPage';
+import MovieNightsPage from '@/components/pages/MovieNightsPage';
+import NotFoundPage from '@/components/pages/NotFoundPage';
 
 export const routes = {
   home: {
@@ -10,34 +10,34 @@ export const routes = {
     label: 'Home',
     path: '/home',
     icon: 'Home',
-    component: Home
+component: HomePage
   },
   discover: {
     id: 'discover',
     label: 'Discover',
     path: '/discover',
     icon: 'Search',
-    component: Discover
+    component: DiscoverPage
   },
   watchlist: {
     id: 'watchlist',
     label: 'Watchlist',
     path: '/watchlist',
     icon: 'Bookmark',
-    component: Watchlist
+    component: WatchlistPage
   },
   movieNights: {
     id: 'movieNights',
     label: 'Movie Nights',
     path: '/movie-nights',
     icon: 'Users',
-    component: MovieNights
+    component: MovieNightsPage
   },
   notFound: {
     id: 'notFound',
     label: 'Not Found',
     path: '/404',
-    component: NotFound
+    component: NotFoundPage
   }
 }
 

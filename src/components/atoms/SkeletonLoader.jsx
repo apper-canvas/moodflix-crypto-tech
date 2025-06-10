@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion'
+import { motion } from 'framer-motion';
+import React from 'react';
 
-export default function SkeletonLoader({ count = 3, type = 'default' }) {
+const SkeletonLoader = ({ count = 3, type = 'default' }) => {
   if (type === 'movie-grid') {
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
@@ -20,7 +21,7 @@ export default function SkeletonLoader({ count = 3, type = 'default' }) {
           </motion.div>
         ))}
       </div>
-    )
+    );
   }
 
   if (type === 'movie-night') {
@@ -45,7 +46,7 @@ export default function SkeletonLoader({ count = 3, type = 'default' }) {
           </motion.div>
         ))}
       </div>
-    )
+    );
   }
 
   return (
@@ -66,5 +67,7 @@ export default function SkeletonLoader({ count = 3, type = 'default' }) {
         </motion.div>
       ))}
     </div>
-  )
-}
+  );
+};
+
+export default SkeletonLoader;

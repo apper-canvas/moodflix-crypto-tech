@@ -1,35 +1,35 @@
-import { motion } from 'framer-motion'
-import { useState, useEffect } from 'react'
-import { toast } from 'react-toastify'
-import ApperIcon from './ApperIcon'
-import MovieCard from './MovieCard'
-import { movieService } from '../services'
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
+import MovieCard from '@/components/molecules/MovieCard';
+import MoodButton from '@/components/molecules/MoodButton';
+import { movieService } from '@/services';
 
 const moods = [
   { id: 'happy', label: 'Happy', emoji: '😊', color: 'bg-yellow-500' },
   { id: 'romantic', label: 'Romantic', emoji: '💕', color: 'bg-pink-500' },
   { id: 'thriller', label: 'Thriller', emoji: '😨', color: 'bg-red-500' },
   { id: 'comedy', label: 'Comedy', emoji: '😂', color: 'bg-green-500' }
-]
+];
 
-export default function MainFeature() {
-  const [selectedMood, setSelectedMood] = useState(null)
-  const [recommendations, setRecommendations] = useState([])
-  const [loading, setLoading] = useState(false)
+const MainFeatureSection = () => {
+  const [selectedMood, setSelectedMood] = useState(null);
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleMoodSelect = async (moodId) => {
-    setSelectedMood(moodId)
-    setLoading(true)
+    setSelectedMood(moodId);
+    setLoading(true);
     
     try {
-      const movies = await movieService.getMoviesByMood(moodId)
-      setRecommendations(movies.slice(0, 4)) // Show top 4 recommendations
+      const movies = await movieService.getMoviesByMood(moodId);
+      setRecommendations(movies.slice(0, 4)); // Show top 4 recommendations
     } catch (err) {
-      toast.error('Failed to load recommendations')
+      toast.error('Failed to load recommendations');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="max-w-4xl mx-auto text-center">
@@ -49,30 +49,13 @@ export default function MainFeature() {
       {/* Mood Selector */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {moods.map((mood, index) => (
-          <motion.button
+          <MoodButton
             key={mood.id}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ 
-              scale: 1.05,
-              boxShadow: `0 0 20px ${mood.color.replace('bg-', 'rgba(').replace('-500', ', 0.3)')}`
-            }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => handleMoodSelect(mood.id)}
-            className={`p-6 rounded-lg transition-all duration-200 ${
-              selectedMood === mood.id
-                ? `${mood.color} shadow-lg`
-                : 'bg-card hover:bg-secondary'
-            }`}
-          >
-            <div className="text-3xl mb-2">{mood.emoji}</div>
-            <div className={`font-medium ${
-              selectedMood === mood.id ? 'text-white' : 'text-accent'
-            }`}>
-              {mood.label}
-            </div>
-          </motion.button>
+            mood={mood}
+            isSelected={selectedMood === mood.id}
+            onClick={handleMoodSelect}
+            index={index}
+          />
         ))}
       </div>
 
@@ -109,5 +92,7 @@ export default function MainFeature() {
         </motion.div>
       )}
     </div>
-  )
-}
+  );
+};
+
+export default MainFeatureSection;

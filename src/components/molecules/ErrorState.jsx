@@ -1,10 +1,12 @@
-import { motion } from 'framer-motion'
-import ApperIcon from './ApperIcon'
+import React from 'react';
+import { motion } from 'framer-motion';
+import ApperIcon from '@/components/ApperIcon';
+import Button from '@/components/atoms/Button';
 
-export default function ErrorState({ 
+const ErrorState = ({ 
   message = 'Something went wrong', 
   onRetry 
-}) {
+}) => {
   return (
     <motion.div
       initial={{ scale: 0.9, opacity: 0 }}
@@ -38,15 +40,17 @@ export default function ErrorState({
       </p>
       
       {onRetry && (
-        <motion.button
+        <Button
+          onClick={onRetry}
+          className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={onRetry}
-          className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors"
         >
           Try Again
-        </motion.button>
+        </Button>
       )}
     </motion.div>
-  )
-}
+  );
+};
+
+export default ErrorState;

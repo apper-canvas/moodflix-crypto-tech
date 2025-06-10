@@ -1,35 +1,36 @@
-import { motion } from 'framer-motion'
-import { useState, useEffect } from 'react'
-import ApperIcon from './ApperIcon'
-import { movieService } from '../services'
-import { format } from 'date-fns'
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import ApperIcon from '@/components/ApperIcon';
+import { movieService } from '@/services';
+import { format } from 'date-fns';
+import Button from '@/components/atoms/Button';
 
-export default function MovieNightCard({ movieNight, onShare, onDelete }) {
-  const [movies, setMovies] = useState([])
-  const [loading, setLoading] = useState(true)
+const MovieNightCard = ({ movieNight, onShare, onDelete }) => {
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadMovies()
-  }, [movieNight.movieIds])
+    loadMovies();
+  }, [movieNight.movieIds]);
 
   const loadMovies = async () => {
     try {
-      const moviePromises = movieNight.movieIds.map(id => movieService.getById(id))
-      const movieResults = await Promise.all(moviePromises)
-      setMovies(movieResults.filter(Boolean))
+      const moviePromises = movieNight.movieIds.map(id => movieService.getById(id));
+      const movieResults = await Promise.all(moviePromises);
+      setMovies(movieResults.filter(Boolean));
     } catch (err) {
-      console.error('Failed to load movies for movie night:', err)
+      console.error('Failed to load movies for movie night:', err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const totalRuntime = movies.reduce((total, movie) => total + (movie.runtime || 0), 0)
+  const totalRuntime = movies.reduce((total, movie) => total + (movie.runtime || 0), 0);
   const formatRuntime = (minutes) => {
-    const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60
-    return `${hours}h ${mins}m`
-  }
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours}h ${mins}m`;
+  };
 
   return (
     <motion.div
@@ -71,22 +72,22 @@ export default function MovieNightCard({ movieNight, onShare, onDelete }) {
 
         {/* Actions */}
         <div className="absolute top-2 right-2 flex space-x-1">
-          <motion.button
+          <Button
+            onClick={onShare}
+            className="p-2 bg-black/50 text-white rounded-full hover:bg-primary"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={onShare}
-            className="p-2 bg-black/50 text-white rounded-full hover:bg-primary transition-colors"
           >
             <ApperIcon name="Share2" size={14} />
-          </motion.button>
-          <motion.button
+          </Button>
+          <Button
+            onClick={onDelete}
+            className="p-2 bg-black/50 text-white rounded-full hover:bg-red-500"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={onDelete}
-            className="p-2 bg-black/50 text-white rounded-full hover:bg-red-500 transition-colors"
           >
             <ApperIcon name="Trash2" size={14} />
-          </motion.button>
+          </Button>
         </div>
       </div>
 
@@ -134,5 +135,7 @@ export default function MovieNightCard({ movieNight, onShare, onDelete }) {
         )}
       </div>
     </motion.div>
-  )
-}
+  );
+};
+
+export default MovieNightCard;
